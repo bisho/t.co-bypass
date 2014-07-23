@@ -8,18 +8,26 @@
 // @grant       none
 // ==/UserScript==
 
+var link_url_props = ['data-expanded-url', 'data-full-url', 'title'];
+
 var observer = new MutationObserver(function(mutations) {
-  var aTags = document.body.getElementsByTagName("a");
-  for (var i = 0; i < aTags.length; i++) {
-    var tag = aTags[i];
-    if(tag.getAttribute("class") !== null && tag.getAttribute("class").indexOf("twitter-atreply") > -1){
+  var links = document.getElementsByClassName("twitter-timeline-link");
+  for (var i = 0; i < links.length; i++) {
+    var link = links[i];
+    if (! link.href) {
       continue;
     }
-    if (tag.href && tag.href.indexOf("://t.co/") > -1) {
-      tag.href = tag.getAttribute("data-expanded-url") !== "" && tag.getAttribute("data-expanded-url") !== null ? tag.getAttribute("data-expanded-url") : tag.getAttribute("data-full-url") !== "" && tag.getAttribute("data-full-url") !== null ? tag.getAttribute("data-full-url") : tag.getAttribute("title");
+    if (link.href.indexOf('http://t.co/') != 0 && link.href.indexOf('https://t.co/') != 0 ) {
+      continue;
+    }
+    for (var prop in link_url_props) {
+      var value = link.getAttribute(link_url_props[prop])
+      if (value) {
+        link.href = value;
+        break;
+      }
     }
   };
-
 });
 
 var config = { 
