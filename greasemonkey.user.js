@@ -8,7 +8,7 @@
 // @grant       none
 // ==/UserScript==
 
-var link_url_props = ['data-expanded-url', 'data-full-url', 'title'];
+var real_url_attrs = ['data-expanded-url', 'data-full-url', 'title'];
 
 var observer = new MutationObserver(function(mutations) {
   var links = document.getElementsByClassName("twitter-timeline-link");
@@ -20,8 +20,8 @@ var observer = new MutationObserver(function(mutations) {
     if (link.href.indexOf('http://t.co/') != 0 && link.href.indexOf('https://t.co/') != 0 ) {
       continue;
     }
-    for (var prop in link_url_props) {
-      var value = link.getAttribute(link_url_props[prop])
+    for (var attr in real_url_attrs) {
+      var value = link.getAttribute(real_url_attrs[attr])
       if (value) {
         link.href = value;
         break;
